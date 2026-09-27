@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Public Healthcare Platform — From Village to Better Health</title>
+    <meta name="description" content="Accessibility and quality of public healthcare services, particularly in rural and underserved areas.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons 1.11.3 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom Healthcare Design System -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- TOP NETWORK & SYNC ANNOUNCEMENT RIBBON -->
+    <div class="network-ribbon">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <span class="d-none d-md-inline text-light-green-highlight">
+                    <i class="bi bi-shield-check me-1"></i> National Rural Public Health Mission (NRPHM)
+                </span>
+                <span id="networkStatusPill" class="network-pill online">
+                    <span class="network-pulse"></span>
+                    <span id="networkStatusLabel">Online • Health Grid Connected</span>
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="#sync-process" data-nav-target="sync-process" class="badge bg-success-subtle text-success text-decoration-none border border-success-subtle py-1 px-2">
+                    <i class="bi bi-arrow-repeat me-1"></i> Sync Status: <span class="pending-sync-count badge bg-warning text-dark ms-1">2</span> Pending
+                </a>
+                <button id="btnToggleNetworkMode" class="btn btn-sm btn-outline-light py-0 px-2" style="font-size:0.75rem;">
+                    <i class="bi bi-wifi-off me-1"></i> Simulate Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERSISTENT OFFLINE NOTICE (SHOWN IN OFFLINE MODE) -->
+    <div id="offlineBannerNotice" class="alert alert-warning mb-0 text-center py-2 border-0 rounded-0" style="display:none; background-color:#fffbeb; color:#92400e;">
+        <div class="container">
+            <i class="bi bi-exclamation-triangle-fill me-1 text-warning"></i>
+            <strong>Offline Mode Active:</strong> Internet disconnected. You can register patients and browse cached health records. Data is stored safely in <strong>LocalStorage</strong> and will synchronize once reconnected.
+            <button class="btn btn-sm btn-dark ms-2 py-0 px-2" onclick="navigateTo('offline-mode')">View Offline Hub</button>
+        </div>
+    </div>
+
+    <!-- MAIN STICKY WEBSITE NAVBAR -->
+    <nav class="navbar navbar-expand-lg main-navbar">
+        <div class="container">
+            <!-- Brand & Tagline -->
+            <a class="brand-wrapper" href="#landing" data-nav-target="landing">
+                <div class="brand-icon-box">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+                <div>
+                    <h1 class="brand-title">Integrated Public Healthcare Platform</h1>
+                    <p class="brand-tagline">From Village to Better Health</p>
+                </div>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHealthcareContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarHealthcareContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" data-nav-target="landing" href="#landing">
+                            <i class="bi bi-house"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-shield-plus"></i> Healthcare
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                            <li><a class="dropdown-item py-2" data-nav-target="symptoms" href="#symptoms"><i class="bi bi-chat-heart text-success me-2"></i> Describe Symptoms</a></li>
+                            <li><a class="dropdown-item py-2" data-nav-target="triage" href="#triage"><i class="bi bi-graph-up-arrow text-success me-2"></i> Digital Triage</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2" data-nav-target="medicines" href="#medicines"><i class="bi bi-capsule text-success me-2"></i> Medicine Availability</a></li>
+                            <li><a class="dropdown-item py-2" data-nav-target="diagnostics" href="#diagnostics"><i class="bi bi-eyedropper text-success me-2"></i> Diagnostic Services</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-calendar-event"></i> Appointments
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                            <li><a class="dropdown-item py-2" data-nav-target="facilities" href="#facilities"><i class="bi bi-hospital text-success me-2"></i> Find Facility & Book</a></li>
+                            <li><a class="dropdown-item py-2" data-nav-target="queue-teleconsult" href="#queue-teleconsult"><i class="bi bi-person-lines-fill text-success me-2"></i> Queue & Teleconsultation</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" data-nav-target="records" href="#records">
+                            <i class="bi bi-file-earmark-medical"></i> Records
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-arrow-left-right"></i> Referrals
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                            <li><a class="dropdown-item py-2" data-nav-target="referrals" href="#referrals"><i class="bi bi-signpost-split text-success me-2"></i> Referral Tracking</a></li>
+                            <li><a class="dropdown-item py-2" data-nav-target="reminders" href="#reminders"><i class="bi bi-bell text-success me-2"></i> Follow-up Reminders</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" data-nav-target="profile" href="#profile">
+                            <i class="bi bi-person-circle"></i> Profile
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Right Side Actions: Emergency 108 & Role/Sign In -->
+                <div class="d-flex align-items-center gap-2">
+                    <!-- STRICTLY RED EMERGENCY BUTTON -->
+                    <button class="btn-emergency" onclick="triggerEmergency108()" title="Trigger Immediate 108 Ambulance Dispatch">
+                        <i class="bi bi-telephone-inbound-fill"></i> 108 Emergency
+                    </button>
+                    <!-- Role Switcher & Sign In Link -->
+                    <button class="btn btn-green-soft btn-sm" onclick="navigateTo('role-selection')">
+                        <i class="bi bi-person-gear"></i> <span id="navCurrentUserName">Ramesh Kumar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN APP VIEW CONTAINER (17 SECTIONS) -->
+    <main class="flex-grow-1">
+
+        <!-- ============================================================== -->
+        <!-- 1. SPLASH / LANDING PAGE -->
+        <!-- ============================================================== -->
+        <section id="page-landing" class="page-section active-page hero-section">
+            <div class="container">
+                <div class="row align-items-center gy-5">
+                    <div class="col-lg-6 hero-content">
+                        <div class="section-tag mb-2">
+                            <i class="bi bi-patch-check-fill"></i> Public Health Infrastructure
+                        </div>
+                        <h1 class="text-dark-green fw-bold mb-3 display-5">
+                            From Village to Better Health
+                        </h1>
+                        <p class="fs-5 text-secondary mb-3 fw-medium">
+                            Better Access • Continuity of Care • Healthier Communities
+                        </p>
+
+                        <!-- Problem Statement Card -->
+                        <div class="hero-problem-box">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-info-circle-fill text-primary-green fs-5 mt-1"></i>
+                                <div>
+                                    <h6 class="text-dark-green fw-bold mb-1">Our Core Mission</h6>
+                                    <p class="small text-secondary mb-0">
+                                        “Accessibility and quality of public healthcare services, particularly in rural and underserved areas.”
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+                            <button class="btn-green-primary" onclick="navigateTo('login-register')">
+                                Get Started <i class="bi bi-arrow-right"></i>
+                            </button>
+                            <button class="btn-green-outline" onclick="navigateTo('symptoms')">
+                                <i class="bi bi-heart-pulse"></i> Check Symptoms Now
+                            </button>
+                            <button class="btn btn-light border" onclick="navigateTo('offline-mode')">
+                                <i class="bi bi-cloud-slash text-warning me-1"></i> Offline Mode
+                            </button>
+                        </div>
+
+                        <!-- 4 Core Pillars Indicators -->
+                        <div class="row mt-5 pt-3 border-top g-3">
+                            <div class="col-6 col-sm-3">
+                                <h4 class="text-dark-green fw-bold mb-0">100%</h4>
+                                <span class="small text-muted">Free Essential Care</span>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <h4 class="text-dark-green fw-bold mb-0">&lt; 3 km</h4>
+                                <span class="small text-muted">Nearest Facility</span>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <h4 class="text-dark-green fw-bold mb-0">24x7</h4>
+                                <span class="small text-muted">Teleconsultation</span>
+                            </div>
+                            <div class="col-6 col-sm-3">
+                                <h4 class="text-dark-green fw-bold mb-0">Offline</h4>
+                                <span class="small text-muted">ASHA Worker Sync</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="hero-image-wrapper">
+                            <!-- Rural healthcare image -->
+                            <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80" 
+                                 alt="Rural Public Healthcare Centre Consultation" 
+                                 class="img-fluid">
+                            <div class="hero-floating-stat">
+                                <div class="brand-icon-box bg-success" style="width:40px; height:40px; font-size:1.1rem;">
+                                    <i class="bi bi-activity"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark-green" style="font-size:0.9rem;">PHC Rampur Operational</span>
+                                    <span class="small text-muted">3 Medical Officers Available Today</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 2. LOGIN / REGISTER -->
+        <!-- ============================================================== -->
+        <section id="page-login-register" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-person-badge"></i> Citizen & Staff Portal</div>
+                            <h2 class="text-dark-green fw-bold">Sign In or Register</h2>
+                            <p class="text-muted small">Access your public health records, appointments, and care services.</p>
+                        </div>
+
+                        <div class="health-card">
+                            <!-- Tabs for Login / Register -->
+                            <ul class="nav nav-pills nav-fill mb-4 bg-light p-1 rounded-3" id="authTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active fw-bold py-2 rounded-2" id="tab-login" data-bs-toggle="pill" data-bs-target="#content-login" type="button">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link fw-bold py-2 rounded-2" id="tab-register" data-bs-toggle="pill" data-bs-target="#content-register" type="button">
+                                        <i class="bi bi-person-plus me-1"></i> Register
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="authTabContent">
+                                <!-- LOGIN PANE -->
+                                <div class="tab-pane fade show active" id="content-login" role="tabpanel">
+                                    <form id="loginForm">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold small text-dark-green">Username / Mobile / Health ID</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-phone"></i></span>
+                                                <input type="text" class="form-control" id="loginIdentifier" placeholder="e.g. 9876543210 or ABHA ID" value="9876543210" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-semibold small text-dark-green">Password</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                                                <input type="password" class="form-control" id="loginPassword" placeholder="Enter password" value="1234" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn-green-primary w-100 py-2">
+                                            <i class="bi bi-box-arrow-in-right"></i> Login
+                                        </button>
+                                    </form>
+
+                                    <!-- Quick One-Click Demo Logins -->
+                                    <div class="mt-4 pt-3 border-top">
+                                        <span class="small text-muted d-block text-center mb-2">Or Instant Quick Login as:</span>
+                                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                            <button class="btn btn-sm btn-outline-success btn-demo-login" data-role="patient">
+                                                <i class="bi bi-person"></i> Patient
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success btn-demo-login" data-role="health_worker">
+                                                <i class="bi bi-heart-pulse"></i> ASHA Worker
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success btn-demo-login" data-role="doctor">
+                                                <i class="bi bi-stethoscope"></i> PHC Doctor
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- REGISTER PANE -->
+                                <div class="tab-pane fade" id="content-register" role="tabpanel">
+                                    <form id="registerForm">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold small text-dark-green">Full Name</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+                                                <input type="text" class="form-control" id="regName" placeholder="Enter citizen name" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold small text-dark-green">10-Digit Mobile Number</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white">+91</span>
+                                                <input type="tel" class="form-control" id="regMobile" placeholder="9876543210" maxlength="10" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-semibold small text-dark-green">Set Password</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                                                <input type="password" class="form-control" id="regPassword" placeholder="Minimum 4 characters" minlength="4" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn-green-primary w-100 py-2">
+                                            <i class="bi bi-person-check"></i> Register
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 3. ROLE SELECTION -->
+        <!-- ============================================================== -->
+        <section id="page-role-selection" class="page-section">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <div class="section-tag"><i class="bi bi-diagram-3"></i> Access Profiles</div>
+                    <h2 class="section-title">Select Your Healthcare Role</h2>
+                    <p class="section-subtitle mx-auto">Choose your platform persona to enter your customized healthcare workspace.</p>
+                </div>
+
+                <div class="row g-4" id="roleCardsContainer">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <div class="text-center mt-5">
+                    <button class="btn-green-primary px-5 py-2 fs-6" onclick="navigateTo('dashboard')">
+                        Proceed to Dashboard <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 4. HOME DASHBOARD -->
+        <!-- ============================================================== -->
+        <section id="page-dashboard" class="page-section">
+            <div class="container">
+                <!-- Greeting & Role Header -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-3">
+                    <div>
+                        <span class="badge bg-light-green text-primary-green border border-light-green mb-1" id="dashboardRoleBadge">Patient</span>
+                        <h2 class="text-dark-green fw-bold mb-0" id="dashboardGreeting">Good Morning, Ramesh Kumar</h2>
+                        <p class="small text-muted mb-0">Village Rampur Cluster • PHC Sonbhadra Central Grid</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-green-outline btn-sm" onclick="navigateTo('profile')">
+                            <i class="bi bi-person"></i> View Profile
+                        </button>
+                        <button class="btn btn-green-primary btn-sm" onclick="navigateTo('symptoms')">
+                            <i class="bi bi-plus-circle"></i> New Visit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 Quick Links Required by Reference -->
+                <h5 class="text-dark-green fw-bold mb-3"><i class="bi bi-lightning-charge text-success me-1"></i> Quick Links</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+    <div class="health-card health-card-interactive text-center p-3 h-100"
+         onclick="navigateTo('records')"
+         style="cursor: pointer;">
+        <div class="brand-icon-box mx-auto mb-2">
+            <i class="bi bi-folder2-open"></i>
+        </div>
+        <h6 class="fw-bold text-dark-green mb-1">Health Records</h6>
+        <span class="small text-muted">Rx, labs & history</span>
+    </div>
+</div>
+                    <div class="col-6 col-md-3">
+    <div class="health-card health-card-interactive text-center p-3 h-100"
+         onclick="navigateTo('records')"
+         style="cursor: pointer;">
+        <div class="brand-icon-box mx-auto mb-2">
+            <i class="bi bi-folder2-open"></i>
+        </div>
+        <h6 class="fw-bold text-dark-green mb-1">Health Records</h6>
+        <span class="small text-muted">Rx, labs & history</span>
+    </div>
+</div>
+                    <div class="col-6 col-md-3">
+    <div class="health-card health-card-interactive text-center p-3 h-100"
+         onclick="navigateTo('records')"
+         style="cursor: pointer;">
+        <div class="brand-icon-box mx-auto mb-2">
+            <i class="bi bi-folder2-open"></i>
+        </div>
+        <h6 class="fw-bold text-dark-green mb-1">Health Records</h6>
+        <span class="small text-muted">Rx, labs & history</span>
+    </div>
+</div>
+                    <div class="col-6 col-md-3">
+    <div class="health-card health-card-interactive text-center p-3 h-100"
+         onclick="navigateTo('records')"
+         style="cursor: pointer;">
+        <div class="brand-icon-box mx-auto mb-2">
+            <i class="bi bi-folder2-open"></i>
+        </div>
+        <h6 class="fw-bold text-dark-green mb-1">Health Records</h6>
+        <span class="small text-muted">Rx, labs & history</span>
+    </div>
+</div>
+                </div>
+
+                <!-- Secondary Dashboard Widgets: Live Status & Alerts -->
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="health-card-green mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark-green mb-0"><i class="bi bi-hospital me-2"></i> Nearest Primary Facility</h5>
+                                <span class="badge-available">Open Today</span>
+                            </div>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="text-dark-green mb-1">Rampur Primary Health Centre (PHC)</h4>
+                                    <p class="small text-secondary mb-2">Distance: <strong>2.4 km</strong> • Dr. Ramesh Sharma (MO on duty)</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-white text-dark-green border">General OPD</span>
+                                        <span class="badge bg-white text-dark-green border">Free Pharmacy</span>
+                                        <span class="badge bg-white text-dark-green border">Teleconsultation</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <button class="btn btn-green-primary btn-sm w-100 mb-2" onclick="navigateTo('facilities')">
+                                        Book Consultation
+                                    </button>
+                                    <button class="btn btn-outline-dark btn-sm w-100" onclick="navigateTo('medicines')">
+                                        Check Medicines
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Referral Banner -->
+                        <div class="health-card mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold text-dark-green mb-0"><i class="bi bi-signpost-split text-success me-2"></i> Active Medical Referral</h6>
+                                <span class="badge bg-warning text-dark">Scheduled</span>
+                            </div>
+                            <p class="small text-secondary mb-2">
+                                Referral to <strong>Chandpur CHC</strong> for Chest Specialist & Digital X-Ray evaluation on <strong>28 Sep 2026, 10:00 AM</strong>.
+                            </p>
+                            <a href="#referrals" data-nav-target="referrals" class="btn btn-sm btn-green-soft">
+                                <i class="bi bi-eye me-1"></i> Track Referral Timeline
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <!-- Upcoming Reminder Card -->
+                        <div class="health-card mb-4">
+                            <h6 class="fw-bold text-dark-green mb-3"><i class="bi bi-bell text-warning me-2"></i> Upcoming Reminder</h6>
+                            <div class="p-3 bg-light rounded-3 border mb-3">
+                                <span class="badge bg-success-subtle text-success mb-1">Doctor Check-up</span>
+                                <p class="fw-bold text-dark-green mb-1 small">Specialist visit at Chandpur CHC</p>
+                                <span class="small text-muted d-block"><i class="bi bi-calendar me-1"></i> Tomorrow, 10:00 AM</span>
+                            </div>
+                            <button class="btn btn-green-outline btn-sm w-100" onclick="navigateTo('reminders')">
+                                View All Reminders
+                            </button>
+                        </div>
+
+                        <!-- Offline Mode Card -->
+                        <div class="health-card-green">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-cloud-arrow-down-fill text-success fs-5"></i>
+                                <h6 class="fw-bold text-dark-green mb-0">Local Storage Active</h6>
+                            </div>
+                            <p class="small text-muted mb-3">Health data is cached on your device. Frontline workers can continue registrations with zero connectivity.</p>
+                            <button class="btn btn-sm btn-green-primary w-100" onclick="navigateTo('offline-mode')">
+                                Open Offline Hub
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 5. PATIENT PROFILE -->
+        <!-- ============================================================== -->
+        <section id="page-profile" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-person-vcard"></i> Citizen Health ID</div>
+                            <h2 class="section-title">Patient Profile</h2>
+                            <p class="section-subtitle mx-auto">Your registered identity under the National Integrated Health Registry.</p>
+                        </div>
+
+                        <div class="health-card">
+                            <div class="d-flex flex-column flex-sm-row align-items-center gap-4 pb-4 border-bottom mb-4">
+                                <div class="position-relative">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" 
+                                         alt="Patient Photo" 
+                                         class="rounded-circle border border-3 border-success shadow-sm"
+                                         style="width: 110px; height: 110px; object-fit: cover;">
+                                    <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-success border border-white">
+                                        <i class="bi bi-check2"></i> Verified
+                                    </span>
+                                </div>
+                                <div class="text-center text-sm-start flex-grow-1">
+                                    <h3 class="text-dark-green fw-bold mb-1">Ramesh Kumar</h3>
+                                    <span class="badge bg-light-green text-primary-green border border-light-green mb-2">ABHA: 14-8921-4320-9912</span>
+                                    <p class="small text-muted mb-0"><i class="bi bi-geo-alt text-danger me-1"></i> Village Rampur, Block 2, Dist. Sonbhadra</p>
+                                </div>
+                                <div>
+                                    <!-- Edit Profile Button Required -->
+                                    <button class="btn btn-green-outline btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Profile Details Grid -->
+                            <div class="row g-3" id="profileDetailsContainer">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="navigateTo('dashboard')">
+                                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                                </button>
+                                <button class="btn btn-sm btn-green-primary" onclick="navigateTo('symptoms')">
+                                    <i class="bi bi-clipboard2-pulse me-1"></i> Start Symptom Check
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 6. DESCRIBE SYMPTOMS -->
+        <!-- ============================================================== -->
+        <section id="page-symptoms" class="page-section">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <div class="section-tag"><i class="bi bi-heart-pulse"></i> Step 1: Self Assessment</div>
+                    <!-- Required Heading -->
+                    <h2 class="section-title">How are you feeling today?</h2>
+                    <p class="section-subtitle mx-auto">Select any symptoms you are experiencing to generate a smart digital triage recommendation.</p>
+                </div>
+
+                <!-- Symptom Search/Input -->
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-success"></i></span>
+                            <input type="text" class="form-control border-start-0" id="symptomSearchInput" 
+                                   placeholder="Search symptoms (e.g. fever, headache, cough)..." 
+                                   onkeyup="filterSymptoms(this.value)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Visual Symptom Cards Required: Fever, Cough, Headache, Cold, Pain, Other -->
+                <div class="row g-3 mb-4" id="symptomsGrid">
+                    <!-- Populated dynamically by JS -->
+                </div>
+
+                <!-- Bottom Action Bar -->
+                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 border shadow-sm mt-4">
+                    <div>
+                        <span class="text-muted small me-2">Selected Symptoms:</span>
+                        <span class="badge bg-success" id="symptomsSelectedCount">0 Selected</span>
+                    </div>
+                    <div>
+                        <!-- Button: Next -->
+                        <button class="btn-green-primary disabled" id="btnProceedTriage" onclick="proceedToDigitalTriage()">
+                            Next <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 7. DIGITAL TRIAGE -->
+        <!-- ============================================================== -->
+        <section id="page-triage" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-clipboard2-pulse"></i> Step 2: Clinical Assessment</div>
+                            <h2 class="section-title">Digital Triage Result</h2>
+                            <p class="section-subtitle mx-auto">Preliminary evaluation generated by rural decision-support algorithm.</p>
+                        </div>
+
+                        <div class="health-card">
+                            <!-- Required Section: Your Symptoms -->
+                            <div class="mb-4">
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Your Symptoms:</h6>
+                                <div id="triageSymptomsList" class="d-flex flex-wrap gap-2">
+                                    <!-- Populated dynamically by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Required Clear Result Card: Medium Priority -->
+                            <div class="health-card-green mb-4 border border-success">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted small fw-bold text-uppercase">Triage Priority Rating</span>
+                                    <span id="triagePriorityBadge" class="badge-priority-medium">Medium Priority</span>
+                                </div>
+                                <h3 class="text-dark-green fw-bold mb-1">Clinical Assessment Summary</h3>
+                                <p class="small text-secondary mb-0" id="triageAdviceText">
+                                    Your reported symptoms suggest acute viral upper respiratory infection. Consultation with a medical officer is recommended within 24 hours.
+                                </p>
+                            </div>
+
+                            <!-- Required Show: Recommended Care & Visit PHC / Doctor -->
+                            <div class="p-3 bg-light rounded-3 border mb-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="brand-icon-box bg-success" style="width:48px; height:48px;">
+                                        <i class="bi bi-hospital"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small d-block">Recommended Care:</span>
+                                        <h4 class="text-dark-green fw-bold mb-0" id="triageRecommendedCare">Visit PHC / Doctor</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Disclaimer Minimal Notice -->
+                            <p class="small text-muted mb-4 fst-italic">
+                                <i class="bi bi-info-circle me-1"></i> Triage recommendations are for guidance only. For acute breathing trouble or severe pain, use the 108 emergency service.
+                            </p>
+
+                            <!-- Required Button: Find Nearest Facility -->
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="navigateTo('symptoms')">
+                                    <i class="bi bi-arrow-left me-1"></i> Modify Symptoms
+                                </button>
+                                <button class="btn-green-primary" onclick="navigateTo('facilities')">
+                                    Find Nearest Facility <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 8. FIND FACILITY & APPOINTMENT -->
+        <!-- ============================================================== -->
+        <section id="page-facilities" class="page-section">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <div class="section-tag"><i class="bi bi-geo-alt"></i> Step 3: Network Facilities</div>
+                        <!-- Required Heading -->
+                        <h2 class="section-title mb-0">Nearby Facilities</h2>
+                        <p class="text-muted small mb-0">Showing public health facilities within your rural block cluster.</p>
+                    </div>
+
+                    <!-- Facility Filter Buttons (PHC, CHC, Rural Hospital) -->
+                    <div class="btn-group shadow-sm">
+                        <button class="btn btn-outline-success btn-sm facility-filter-btn active" onclick="filterFacilityByType('all', this)">All</button>
+                        <button class="btn btn-outline-success btn-sm facility-filter-btn" onclick="filterFacilityByType('PHC', this)">PHC</button>
+                        <button class="btn btn-outline-success btn-sm facility-filter-btn" onclick="filterFacilityByType('CHC', this)">CHC</button>
+                        <button class="btn btn-outline-success btn-sm facility-filter-btn" onclick="filterFacilityByType('Hospital', this)">Rural Hospital</button>
+                    </div>
+                </div>
+
+                <!-- Facilities List Required: Facility name, Type, Distance, Available service, Availability. Buttons: View, Book -->
+                <div class="row" id="facilitiesListContainer">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 9. QUEUE / TELECONSULTATION -->
+        <!-- ============================================================== -->
+        <section id="page-queue-teleconsult" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-person-video2"></i> Digital OPD Waiting Room</div>
+                            <!-- Required Heading -->
+                            <h2 class="section-title">Your Appointment</h2>
+                            <p class="section-subtitle mx-auto">Real-time token queue tracking & integrated teleconsultation portal.</p>
+                        </div>
+
+                        <!-- Appointment & Token Card Required: Facility, Date, Time, Queue number, Waiting status -->
+                        <div class="health-card mb-4">
+                            <div class="row align-items-center g-4">
+                                <div class="col-md-7">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="badge bg-light-green text-primary-green border border-light-green">PHC Tele-OPD</span>
+                                        <span class="badge bg-success text-white">Confirmed</span>
+                                    </div>
+                                    <h3 class="text-dark-green fw-bold mb-1">Rampur Primary Health Centre</h3>
+                                    <p class="small text-muted mb-3"><i class="bi bi-person-badge text-success me-1"></i> Doctor: Dr. Ramesh Sharma, MBBS (General MO)</p>
+
+                                    <ul class="list-unstyled small mb-3">
+                                        <li class="mb-1"><i class="bi bi-calendar2-event text-success me-2"></i> <strong>Date:</strong> Today, 27 Sep 2026</li>
+                                        <li class="mb-1"><i class="bi bi-clock text-success me-2"></i> <strong>Time Slot:</strong> 10:30 AM – 11:00 AM</li>
+                                        <li class="mb-1"><i class="bi bi-hourglass-split text-warning me-2"></i> <strong>Waiting Status:</strong> <span id="queueWaitDisplay">3 Patients Ahead • Est. wait ~10 mins</span></li>
+                                        <li><i class="bi bi-check2-circle text-success me-2"></i> <strong>Currently Serving:</strong> <span id="queueServingDisplay" class="fw-bold text-dark-green">Token No. 9</span></li>
+                                    </ul>
+
+                                    <!-- Required Consultation Options: Audio, Video, Chat -->
+                                    <div class="d-flex gap-2 mb-3">
+                                        <span class="badge bg-light text-dark-green border"><i class="bi bi-camera-video text-success me-1"></i> Video</span>
+                                        <span class="badge bg-light text-dark-green border"><i class="bi bi-mic text-success me-1"></i> Audio</span>
+                                        <span class="badge bg-light text-dark-green border"><i class="bi bi-chat-dots text-success me-1"></i> Chat</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <!-- Required Token Box: Example: Token No. 12 -->
+                                    <div class="queue-token-box">
+                                        <span class="text-muted small fw-bold text-uppercase d-block">Your Queue Token</span>
+                                        <div class="queue-number" id="queueTokenDisplay">Token No. 12</div>
+                                        <span class="badge bg-success-subtle text-success py-1 px-3">Live Status Active</span>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm btn-outline-success" onclick="advanceQueueManual()">
+                                                <i class="bi bi-arrow-clockwise me-1"></i> Next Patient Call
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Required Buttons: Join Teleconsultation, View Details -->
+                            <div class="d-flex flex-wrap gap-2 pt-3 border-top mt-4">
+                                <button class="btn-green-primary flex-fill" onclick="launchTeleconsultation()">
+                                    <i class="bi bi-camera-video-fill"></i> Join Teleconsultation
+                                </button>
+                                <button class="btn btn-green-outline" onclick="navigateTo('records')">
+                                    <i class="bi bi-file-earmark-medical"></i> View Details & Record
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 10. CONSULTATION & HEALTH RECORD -->
+        <!-- ============================================================== -->
+        <section id="page-records" class="page-section">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <div class="section-tag"><i class="bi bi-folder2-open"></i> Longitudinal Health Records</div>
+                        <h2 class="section-title mb-0">Consultation & Health Record</h2>
+                        <p class="text-muted small mb-0">Unified Electronic Health Record (EHR) linked with ABHA Health ID.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="printHealthRecord()">
+                            <i class="bi bi-printer me-1"></i> Print Summary
+                        </button>
+                        <button class="btn btn-green-primary btn-sm" onclick="navigateTo('medicines')">
+                            <i class="bi bi-capsule me-1"></i> Check Medicines
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <!-- Required Prescription Pad & Doctor Information -->
+                        <div class="prescription-pad mb-4">
+                            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                                <div>
+                                    <h4 class="text-dark-green fw-bold mb-0">Dr. Ramesh Sharma, MBBS</h4>
+                                    <p class="small text-muted mb-0">Senior Medical Officer • Reg #MCI-48291 • Rampur PHC</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-light-green text-primary-green border border-light-green">Visit Date: 27 Sep 2026</span>
+                                    <span class="small text-muted d-block">OPD Slip: #PHC-2026-9811</span>
+                                </div>
+                            </div>
+
+                            <!-- Vitals Strip -->
+                            <div class="bg-light p-2 rounded-2 mb-3 d-flex flex-wrap gap-3 small text-secondary">
+                                <span><strong>BP:</strong> 124/82 mmHg</span>
+                                <span><strong>Pulse:</strong> 78 bpm</span>
+                                <span><strong>SpO2:</strong> 98%</span>
+                                <span><strong>Temp:</strong> 100.2 °F</span>
+                                <span><strong>Weight:</strong> 66 kg</span>
+                            </div>
+
+                            <!-- Consultation Notes Required -->
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-dark-green mb-1"><i class="bi bi-journal-text me-1 text-success"></i> Consultation Notes:</h6>
+                                <p class="small text-secondary mb-2">
+                                    Patient reported acute onset high fever with mild dry cough for 3 days. Chest sounds are vesicular bilaterally. Pharynx mildly congested. No acute respiratory distress.
+                                </p>
+                                <span class="badge bg-success-subtle text-success">Diagnosis: Acute Viral URI with Seasonal Pyrexia</span>
+                            </div>
+
+                            <!-- Prescription Required -->
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="rx-symbol">℞</span>
+                                    <h6 class="fw-bold text-dark-green mb-0">Prescription (Dispatched to PHC Pharmacy)</h6>
+                                </div>
+                                <div id="recordPrescriptionsContainer">
+                                    <!-- Populated dynamically by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Lab Reports Required -->
+                            <div class="pt-3 border-top">
+                                <h6 class="fw-bold text-dark-green mb-2"><i class="bi bi-eyedropper text-danger me-1"></i> Lab Reports Ordered:</h6>
+                                <div class="table-responsive">
+                                    <table class="health-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Investigation</th>
+                                                <th>Status</th>
+                                                <th>Turnaround</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Complete Blood Count (CBC)</td>
+                                                <td><span class="badge bg-warning text-dark">Sample Collected</span></td>
+                                                <td>Today, 2:00 PM</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Rapid Malaria Antigen (Pf/Pv)</td>
+                                                <td><span class="badge bg-success">Negative</span></td>
+                                                <td>Completed</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <!-- Required Clean Health-Record Timeline: Previous Visits -->
+                        <div class="health-card">
+                            <h5 class="text-dark-green fw-bold mb-3"><i class="bi bi-clock-history text-success me-2"></i> Previous Visits</h5>
+                            <div id="recordPastVisitsContainer">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                            <button class="btn btn-green-outline btn-sm w-100 mt-2" onclick="navigateTo('referrals')">
+                                Track Referral Chain
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 11. MEDICINE AVAILABILITY -->
+        <!-- ============================================================== -->
+        <section id="page-medicines" class="page-section">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <div class="section-tag"><i class="bi bi-capsule"></i> Essential Drug List</div>
+                        <h2 class="section-title mb-0">Medicine Availability</h2>
+                        <p class="text-muted small mb-0">Live inventory of government-subsidized and free essential medicines.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-search text-success"></i></span>
+                            <input type="text" class="form-control" placeholder="Search medicine name..." onkeyup="renderMedicinesList(this.value)">
+                        </div>
+                        <button class="btn btn-green-primary btn-sm text-nowrap" onclick="renderMedicinesList('')">
+                            View All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Medicine Cards: Medicine name, Facility, Availability (Available, Limited, Unavailable), Button: View All -->
+                <div class="row" id="medicinesGridContainer">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 12. DIAGNOSTIC SERVICES -->
+        <!-- ============================================================== -->
+        <section id="page-diagnostics" class="page-section">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <div class="section-tag"><i class="bi bi-eyedropper"></i> Public Health Laboratories</div>
+                        <h2 class="section-title mb-0">Diagnostic Services</h2>
+                        <p class="text-muted small mb-0">Free lab investigations: CBC, Blood Sugar, ECG, X-Ray and point-of-care tests.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-search text-success"></i></span>
+                            <input type="text" class="form-control" placeholder="Search test name..." onkeyup="renderDiagnosticsList(this.value)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagnostic Cards: Test name, Facility, Availability, Buttons: Request, View -->
+                <div class="row" id="diagnosticsGridContainer">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 13. REFERRAL TRACKING -->
+        <!-- ============================================================== -->
+        <section id="page-referrals" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-signpost-split"></i> Continuum of Care</div>
+                            <h2 class="section-title">Referral Tracking</h2>
+                            <p class="section-subtitle mx-auto">Seamless electronic referrals from Sub-Centre and PHC to CHC Specialists.</p>
+                        </div>
+
+                        <div class="health-card mb-4">
+                            <!-- Required Referral Timeline: Requested -> Accepted -> Scheduled -> Completed -->
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-light-green text-primary-green border border-light-green">Referral Slip #REF-2026-8941</span>
+                                <span id="referralCurrentStatusBadge" class="badge bg-warning text-dark">Scheduled</span>
+                            </div>
+
+                            <div class="referral-stepper" id="referralStepperContainer">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+
+                            <!-- Referral Case Summary Card -->
+                            <div class="p-3 bg-light-green rounded-3 border border-light-green mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <span class="small text-muted d-block font-weight-bold">Referring Facility & Doctor:</span>
+                                        <span class="fw-bold text-dark-green">Rampur PHC — Dr. Ramesh Sharma, MO</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="small text-muted d-block font-weight-bold">Target Specialist Facility:</span>
+                                        <span class="fw-bold text-dark-green">Chandpur CHC — Dr. Sunita Verma (Pulmonology)</span>
+                                    </div>
+                                    <div class="col-12 border-top pt-2">
+                                        <span class="small text-muted d-block font-weight-bold">Reason for Referral:</span>
+                                        <p class="small text-secondary mb-0">Persistent bronchitic cough with chest wheezing requiring Digital Chest X-Ray & Specialist Pulmonology evaluation.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Buttons: View Details, Advance Step Simulation -->
+                            <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                                <button class="btn btn-green-outline btn-sm" data-bs-toggle="modal" data-bs-target="#referralDetailsModal">
+                                    <i class="bi bi-file-earmark-text me-1"></i> View Details
+                                </button>
+                                <button class="btn btn-green-primary btn-sm ms-auto" onclick="advanceReferralStep()">
+                                    <i class="bi bi-fast-forward me-1"></i> Advance Referral Step (Demo)
+                                </button>
+                                <button class="btn btn-outline-dark btn-sm" onclick="navigateTo('reminders')">
+                                    View Reminders <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 14. FOLLOW-UP REMINDERS -->
+        <!-- ============================================================== -->
+        <section id="page-reminders" class="page-section">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <div class="section-tag"><i class="bi bi-bell"></i> Proactive Follow-up Care</div>
+                        <h2 class="section-title mb-0">Follow-up Reminders</h2>
+                        <p class="text-muted small mb-0">Automated reminders for doctor check-ups, diagnostic tests, and medicine refills.</p>
+                    </div>
+                    <button class="btn btn-green-primary btn-sm" onclick="showToast('New Reminder Added', 'Routine screening reminder scheduled.', 'success')">
+                        <i class="bi bi-plus-circle me-1"></i> Add Custom Reminder
+                    </button>
+                </div>
+
+                <!-- Reminders Grid: Doctor check-up, Diagnostic test, Medicine follow-up, Other follow-up -->
+                <div class="row" id="remindersListContainer">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 15. ONLINE MODE -->
+        <!-- ============================================================== -->
+        <section id="page-online-mode" class="page-section">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <div class="section-tag"><i class="bi bi-broadcast"></i> Central Health Grid</div>
+                    <div class="d-inline-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success p-2 px-3 fs-6 rounded-pill">
+                            <span class="network-pulse me-1"></span> Online
+                        </span>
+                    </div>
+                    <h2 class="section-title">Online Healthcare Dashboard</h2>
+                    <p class="section-subtitle mx-auto">Live teleconsultations, real-time doctor attendance, and instant central database synchronization.</p>
+                </div>
+
+                <!-- Real-time Data Counters -->
+                <div class="row g-4 mb-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="health-card text-center">
+                            <i class="bi bi-person-video3 text-success fs-1 mb-2"></i>
+                            <h3 class="fw-bold text-dark-green mb-0">14</h3>
+                            <span class="small text-muted">Doctors Online Now</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="health-card text-center">
+                            <i class="bi bi-hospital text-success fs-1 mb-2"></i>
+                            <h3 class="fw-bold text-dark-green mb-0">28</h3>
+                            <span class="small text-muted">Inpatient Beds Available</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="health-card text-center">
+                            <i class="bi bi-clock-history text-success fs-1 mb-2"></i>
+                            <h3 class="fw-bold text-dark-green mb-0">&lt; 12 min</h3>
+                            <span class="small text-muted">Avg Teleconsult Wait Time</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="health-card text-center">
+                            <i class="bi bi-truck text-danger fs-1 mb-2"></i>
+                            <h3 class="fw-bold text-dark-green mb-0">4 Units</h3>
+                            <span class="small text-muted">108 Ambulances on Standby</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-card">
+                    <h5 class="text-dark-green fw-bold mb-3"><i class="bi bi-activity text-success me-2"></i> Live Real-Time Tele-OPD Stream</h5>
+                    <div class="table-responsive">
+                        <table class="health-table">
+                            <thead>
+                                <tr>
+                                    <th>OPD Token</th>
+                                    <th>Citizen</th>
+                                    <th>Facility</th>
+                                    <th>Doctor</th>
+                                    <th>Live Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Token #9</strong></td>
+                                    <td>Sunil Yadav</td>
+                                    <td>Rampur PHC</td>
+                                    <td>Dr. Ramesh Sharma</td>
+                                    <td><span class="badge bg-success">In Consultation</span></td>
+                                    <td><button class="btn btn-sm btn-outline-success py-0" onclick="navigateTo('queue-teleconsult')">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Token #10</strong></td>
+                                    <td>Kavita Devi</td>
+                                    <td>Rampur PHC</td>
+                                    <td>Dr. Ramesh Sharma</td>
+                                    <td><span class="badge bg-warning text-dark">Next in Queue</span></td>
+                                    <td><button class="btn btn-sm btn-outline-secondary py-0" onclick="navigateTo('queue-teleconsult')">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Token #12</strong></td>
+                                    <td>Ramesh Kumar (You)</td>
+                                    <td>Rampur PHC</td>
+                                    <td>Dr. Ramesh Sharma</td>
+                                    <td><span class="badge bg-info text-dark">Waiting (3 Ahead)</span></td>
+                                    <td><button class="btn btn-sm btn-green-primary py-0" onclick="navigateTo('queue-teleconsult')">Join Room</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 16. OFFLINE MODE -->
+        <!-- ============================================================== -->
+        <section id="page-offline-mode" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-cloud-slash"></i> Resilient Edge Architecture</div>
+                            <!-- Required Heading -->
+                            <h2 class="section-title">Offline Mode</h2>
+                            <p class="section-subtitle mx-auto">
+                                Enabling ASHA workers, ANMs, and rural residents to record patient visits even when cell network coverage is completely absent.
+                            </p>
+                            <!-- Required Badge: Data saved locally -->
+                            <div class="d-inline-flex align-items-center gap-2 mt-2">
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle p-2 px-3 fs-6 rounded-pill">
+                                    <i class="bi bi-hdd-fill me-1"></i> Data saved locally to LocalStorage
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Offline Patient Registration Form Required -->
+                        <div class="health-card mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-dark-green fw-bold mb-0">
+                                    <i class="bi bi-person-plus-fill text-success me-2"></i> Offline Patient Registration
+                                </h4>
+                                <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Will cache in browser</span>
+                            </div>
+
+                            <form id="offlineRegistrationForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-semibold text-dark-green">Patient Full Name</label>
+                                        <input type="text" class="form-control" id="offPatientName" placeholder="e.g. Meena Devi" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-semibold text-dark-green">Age (Years)</label>
+                                        <input type="number" class="form-control" id="offPatientAge" placeholder="28" min="1" max="110" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-semibold text-dark-green">Gender</label>
+                                        <select class="form-select" id="offPatientGender">
+                                            <option value="Female">Female</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-semibold text-dark-green">Village / Hamlet</label>
+                                        <input type="text" class="form-control" id="offPatientVillage" placeholder="e.g. Shivpur Tola" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-semibold text-dark-green">Priority Assessment</label>
+                                        <select class="form-select" id="offPatientPriority">
+                                            <option value="Medium">Medium Priority</option>
+                                            <option value="High">High Priority (Urgent)</option>
+                                            <option value="Low">Low Priority</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-semibold text-dark-green">Chief Complaints / Symptoms</label>
+                                        <textarea class="form-control" id="offPatientSymptoms" rows="2" placeholder="Describe symptoms e.g. Mild fever, morning sickness, dizziness..." required></textarea>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-end">
+                                    <button type="submit" class="btn-green-primary">
+                                        <i class="bi bi-save2"></i> Save Patient Offline
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Offline Saved Records Table Required -->
+                        <div class="health-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark-green mb-0">
+                                    <i class="bi bi-database-check text-success me-2"></i> Saved Offline Records (Ready for Sync)
+                                </h5>
+                                <button class="btn btn-sm btn-green-soft" onclick="navigateTo('sync-process')">
+                                    <i class="bi bi-arrow-repeat me-1"></i> Go to Sync Hub
+                                </button>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="health-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Citizen</th>
+                                            <th>Age/Sex</th>
+                                            <th>Village</th>
+                                            <th>Symptoms</th>
+                                            <th>Priority</th>
+                                            <th>Storage Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="offlineQueueTableBody">
+                                        <!-- Populated dynamically by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 17. SYNC PROCESS -->
+        <!-- ============================================================== -->
+        <section id="page-sync-process" class="page-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="text-center mb-4">
+                            <div class="section-tag"><i class="bi bi-arrow-repeat"></i> Data Replication</div>
+                            <h2 class="section-title">Visual Synchronization Flow</h2>
+                            <p class="section-subtitle mx-auto">
+                                Watch how frontline health records move securely from local browser storage to the state central healthcare database.
+                            </p>
+                        </div>
+
+                        <!-- Visual Synchronization Flow Container Required: LOCAL STORAGE -> SYNC QUEUE -> BACKEND API -> DATABASE -->
+                        <div class="sync-flow-container mb-4">
+                            <div class="sync-nodes-row">
+                                <!-- Node 1 -->
+                                <div class="sync-node-box" id="syncNode1">
+                                    <div class="brand-icon-box mx-auto mb-2"><i class="bi bi-hdd-fill"></i></div>
+                                    <h6 class="fw-bold text-dark-green mb-1">LOCAL STORAGE</h6>
+                                    <span class="small text-muted d-block">Offline Client Cache</span>
+                                    <span class="badge bg-white text-success border mt-2">Indexed / SQLite</span>
+                                </div>
+
+                                <div class="sync-arrow"><i class="bi bi-arrow-right-circle-fill"></i></div>
+
+                                <!-- Node 2 -->
+                                <div class="sync-node-box" id="syncNode2">
+                                    <div class="brand-icon-box mx-auto mb-2"><i class="bi bi-stack"></i></div>
+                                    <h6 class="fw-bold text-dark-green mb-1">SYNC QUEUE</h6>
+                                    <span class="small text-muted d-block">FHIR Payload Packager</span>
+                                    <span class="badge bg-white text-success border mt-2">Encrypted Buffer</span>
+                                </div>
+
+                                <div class="sync-arrow"><i class="bi bi-arrow-right-circle-fill"></i></div>
+
+                                <!-- Node 3 -->
+                                <div class="sync-node-box" id="syncNode3">
+                                    <div class="brand-icon-box mx-auto mb-2"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+                                    <h6 class="fw-bold text-dark-green mb-1">BACKEND API</h6>
+                                    <span class="small text-muted d-block">HTTPS Health Gateway</span>
+                                    <span class="badge bg-white text-success border mt-2">REST / GraphQL</span>
+                                </div>
+
+                                <div class="sync-arrow"><i class="bi bi-arrow-right-circle-fill"></i></div>
+
+                                <!-- Node 4 -->
+                                <div class="sync-node-box" id="syncNode4">
+                                    <div class="brand-icon-box mx-auto mb-2"><i class="bi bi-server"></i></div>
+                                    <h6 class="fw-bold text-dark-green mb-1">DATABASE</h6>
+                                    <span class="small text-muted d-block">National Health Registry</span>
+                                    <span class="badge bg-white text-success border mt-2">ACID Compliant</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Sync Execution & Status Simulation -->
+                            <div class="p-3 bg-light rounded-3 border text-center my-4">
+                                <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap mb-3">
+                                    <div>
+                                        <span class="text-muted small d-block">Pending Offline Records:</span>
+                                        <strong class="fs-5 text-dark-green" id="syncPendingItemsCount">2</strong>
+                                    </div>
+                                    <div class="vr d-none d-md-block"></div>
+                                    <div>
+                                        <span class="text-muted small d-block">Network Link:</span>
+                                        <span class="badge bg-success-subtle text-success py-1 px-3">Internet Connected</span>
+                                    </div>
+                                    <div class="vr d-none d-md-block"></div>
+                                    <div>
+                                        <span class="text-muted small d-block">Last Sync:</span>
+                                        <span class="small fw-semibold text-secondary" id="syncLastCompletedTime">Just now</span>
+                                    </div>
+                                </div>
+
+                                <!-- Animated Progress Bar -->
+                                <div id="syncProgressWrapper" class="progress mb-2" style="height: 10px; display: none;">
+                                    <div id="syncProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 0%;"></div>
+                                </div>
+                                <div id="syncStepStatusText" class="small text-secondary mb-3">
+                                    Ready to replicate offline records with central health cloud.
+                                </div>
+
+                                <button id="btnExecuteSync" class="btn-green-primary px-4 py-2" onclick="startSyncProcessSimulation()">
+                                    <i class="bi bi-arrow-repeat"></i> Trigger Full Sync
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- INTERACTIVE MODALS -->
+    <!-- ============================================================== -->
+
+    <!-- STRICT EMERGENCY 108 MODAL (RED ACCENT) -->
+    <div class="modal fade" id="emergencyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 overflow-hidden rounded-4">
+                <div class="emergency-modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold text-white mb-0">
+                        <i class="bi bi-exclamation-octagon-fill me-2"></i> EMERGENCY 108 RESPONSE
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-ambulance text-danger" style="font-size: 3.5rem;"></i>
+                    </div>
+                    <h4 class="fw-bold text-danger mb-2">Immediate Ambulance Dispatch</h4>
+                    <p class="small text-secondary mb-4">
+                        GPS Location broadcasted: <strong>Village Rampur (24.1238° N, 83.0451° E)</strong>. Medical triage will route nearest ALS/BLS Ambulance.
+                    </p>
+                    <div class="p-3 bg-danger-subtle rounded-3 mb-4 text-start">
+                        <ul class="list-unstyled small mb-0">
+                            <li><i class="bi bi-telephone-fill text-danger me-2"></i> <strong>Toll-Free Helpline:</strong> 108 (National Emergency)</li>
+                            <li><i class="bi bi-hospital text-danger me-2"></i> <strong>Trauma Centre:</strong> Sonbhadra District Hospital (14 km)</li>
+                            <li><i class="bi bi-shield-shaded text-danger me-2"></i> <strong>Anti-Snake Venom Stock:</strong> Verified Available at CHC</li>
+                        </ul>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger flex-fill fw-bold" onclick="dispatchAmbulanceConfirm()">
+                            Confirm Dispatch 108
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PATIENT PROFILE MODAL -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark-green"><i class="bi bi-pencil-square me-2 text-success"></i> Edit Patient Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark-green">Full Name</label>
+                            <input type="text" class="form-control" id="editName" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Age</label>
+                                <input type="number" class="form-control" id="editAge" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Gender</label>
+                                <select class="form-select" id="editGender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Phone</label>
+                                <input type="tel" class="form-control" id="editPhone" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Blood Group</label>
+                                <select class="form-select" id="editBlood">
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark-green">Village Address</label>
+                            <textarea class="form-control" id="editAddress" rows="2" required></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn-green-primary btn-sm">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOK APPOINTMENT MODAL -->
+    <div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark-green"><i class="bi bi-calendar2-check me-2 text-success"></i> Book OPD Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="bookAppointmentForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark-green">Facility</label>
+                            <select class="form-select" id="bookFacilityName" required>
+                                <option value="Rampur Primary Health Centre (PHC)">Rampur Primary Health Centre (PHC)</option>
+                                <option value="Chandpur Community Health Centre (CHC)">Chandpur Community Health Centre (CHC)</option>
+                                <option value="Sonbhadra Sub-District Hospital">Sonbhadra Sub-District Hospital</option>
+                                <option value="Shivpur Health & Wellness Sub-Centre">Shivpur Health & Wellness Sub-Centre</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark-green">Specialty / Department</label>
+                            <select class="form-select" id="bookDepartment">
+                                <option value="General OPD">General OPD & Fever Clinic</option>
+                                <option value="Maternal & Child Health">Maternal & Child Health (ANC)</option>
+                                <option value="NCD Clinic">Non-Communicable Diseases (BP / Sugar)</option>
+                                <option value="Teleconsultation">Video Teleconsultation</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Date</label>
+                                <input type="date" class="form-control" id="bookDate" value="2026-09-27" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark-green">Time Slot</label>
+                                <select class="form-select" id="bookTime">
+                                    <option value="10:30 AM – 11:00 AM">10:30 AM – 11:00 AM</option>
+                                    <option value="11:00 AM – 11:30 AM">11:00 AM – 11:30 AM</option>
+                                    <option value="11:30 AM – 12:00 PM">11:30 AM – 12:00 PM</option>
+                                    <option value="02:00 PM – 02:30 PM">02:00 PM – 02:30 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-light rounded-3 mb-3 small text-muted">
+                            <i class="bi bi-info-circle text-success me-1"></i> Generates digital token and adds you to the live tele-consultation queue.
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn-green-primary btn-sm">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FACILITY DETAILS MODAL -->
+    <div class="modal fade" id="facilityDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark-green">Facility Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4" id="facilityDetailsModalBody">
+                    <!-- Dynamic facility detail -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIAGNOSTIC TEST DETAILS MODAL -->
+    <div class="modal fade" id="diagnosticDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark-green">Diagnostic Investigation Guide</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4" id="diagnosticDetailsModalBody">
+                    <!-- Dynamic diagnostic detail -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFERRAL DETAILS MODAL -->
+    <div class="modal fade" id="referralDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-dark-green"><i class="bi bi-file-earmark-medical me-2 text-success"></i> Official Digital Referral Slip</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center pb-3 border-bottom mb-3">
+                        <h5 class="fw-bold text-dark-green mb-1">State Integrated Health Referral System</h5>
+                        <span class="badge bg-light-green text-primary-green border">Slip ID: #REF-2026-8941</span>
+                    </div>
+                    <ul class="list-group list-group-flush small mb-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Patient Name:</span>
+                            <span class="fw-bold">Ramesh Kumar (42 Y / M)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Referring Doctor:</span>
+                            <span class="fw-bold">Dr. Ramesh Sharma (Rampur PHC)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Referred To:</span>
+                            <span class="fw-bold text-success">Dr. Sunita Verma (Chandpur CHC)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Specialty Required:</span>
+                            <span class="fw-bold">Chest Specialist & Digital X-Ray</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Status:</span>
+                            <span class="badge bg-warning text-dark">Scheduled for 28 Sep 2026</span>
+                        </li>
+                    </ul>
+                    <div class="p-3 bg-light rounded-3 text-center">
+                        <i class="bi bi-qr-code fs-1 text-dark"></i>
+                        <span class="d-block small text-muted mt-1">Scan at CHC Reception Desk for Fast-Track Entry</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE TELECONSULTATION ROOM MODAL -->
+    <div class="modal fade" id="teleconsultRoomModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 bg-transparent">
+                <div class="teleconsult-room">
+                    <!-- Teleconsult Header -->
+                    <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom border-secondary">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="badge bg-danger p-2 px-3 rounded-pill d-flex align-items-center gap-2">
+                                <span class="network-pulse"></span> LIVE
+                            </div>
+                            <div>
+                                <h5 class="fw-bold text-white mb-0">Dr. Ramesh Sharma, MBBS</h5>
+                                <span class="small text-light" style="font-size:0.75rem;">Medical Officer • Rampur PHC e-Sanjeevani Room</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-dark border border-secondary px-3 py-2 text-white font-monospace" id="teleconsultDuration">00:00</span>
+                            <button class="btn btn-sm btn-outline-light" onclick="endTeleconsultation()">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Room Main Layout: Video + Live Chat -->
+                    <div class="row g-3">
+                        <div class="col-lg-8">
+                            <div class="video-screen">
+                                <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80" 
+                                     alt="Doctor Video Feed" 
+                                     class="doctor-feed-img">
+                                <!-- Self PiP View -->
+                                <div class="self-pip-video" id="selfVideoFeed">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" alt="Self Video Feed">
+                                </div>
+                            </div>
+
+                            <!-- Call Controls -->
+                            <div class="teleconsult-controls">
+                                <button class="btn-call-control" id="btnToggleMic" onclick="toggleCallMic()" title="Toggle Mic">
+                                    <i class="bi bi-mic-fill"></i>
+                                </button>
+                                <button class="btn-call-control" id="btnToggleVideo" onclick="toggleCallVideo()" title="Toggle Camera">
+                                    <i class="bi bi-camera-video-fill"></i>
+                                </button>
+                                <button class="btn-call-control bg-danger" onclick="endTeleconsultation()" title="End Call">
+                                    <i class="bi bi-telephone-x-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Consultation Chat -->
+                        <div class="col-lg-4">
+                            <div class="bg-white rounded-3 p-3 d-flex flex-column" style="height: 450px;">
+                                <h6 class="fw-bold text-dark-green border-bottom pb-2 mb-2">
+                                    <i class="bi bi-chat-text-fill text-success me-1"></i> Consultation Notes & Chat
+                                </h6>
+                                <div class="flex-grow-1 overflow-auto pe-1" id="teleconsultChatContainer">
+                                    <!-- Messages populated dynamically -->
+                                </div>
+                                <form id="teleconsultChatForm" class="mt-2 pt-2 border-top">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" id="teleconsultInput" placeholder="Message doctor...">
+                                        <button class="btn btn-sm btn-green-primary" type="submit">
+                                            <i class="bi bi-send-fill"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <!-- PROFESSIONAL HEALTHCARE FOOTER -->
+    <footer class="bg-white border-top mt-auto py-4">
+        <div class="container">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <div class="brand-icon-box" style="width:28px; height:28px; font-size:0.9rem;">
+                            <i class="bi bi-heart-pulse-fill"></i>
+                        </div>
+                        <span class="fw-bold text-dark-green">Integrated Public Healthcare Platform</span>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        Problem Statement: Accessibility and quality of public healthcare services, particularly in rural and underserved areas.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end gap-3 small mb-1">
+                        <a href="#landing" data-nav-target="landing" class="text-secondary text-decoration-none">Home</a>
+                        <a href="#symptoms" data-nav-target="symptoms" class="text-secondary text-decoration-none">Symptoms</a>
+                        <a href="#facilities" data-nav-target="facilities" class="text-secondary text-decoration-none">Facilities</a>
+                        <a href="#offline-mode" data-nav-target="offline-mode" class="text-secondary text-decoration-none">Offline Hub</a>
+                        <a href="#sync-process" data-nav-target="sync-process" class="text-secondary text-decoration-none">Sync Process</a>
+                    </div>
+                    <span class="small text-muted">National Health Mission • Digital Public Infrastructure Prototype</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3.3 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
